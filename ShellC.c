@@ -104,17 +104,20 @@ int lsh_launch(char **args) {
 int lsh_cd(char **args);
 int lsh_help(char **args);
 int lsh_exit(char **args);
+int lsh_app(char **args);
 
 char *builtin_str[] = {
     "cd",
     "help",
-    "exit"
+    "exit",
+    "app"
 };
 
 int(*builtin_func[]) (char**) = {
     &lsh_cd,
     &lsh_help,
-    &lsh_exit
+    &lsh_exit,
+    &lsh_app
 };
 
 int lsh_num_builtins() {
@@ -132,7 +135,26 @@ int lsh_cd(char **args) {
     return 1;
 }
 
-int lsh_help(char ** args) {
+int lsh_app(char **args) {
+    char **newArgs = malloc(sizeof(char *) * 4);
+
+    if(args[1] == NULL) {
+        fprintf(stderr, "app: expected argument");
+    }
+    
+    newArgs[0] = "open";
+    newArgs[1] = "-a";
+    newArgs[2] = args[1];
+    newArgs[3] = NULL;
+
+    lsh_launch(newArgs);
+
+    free(newArgs);
+
+    return 1;
+}
+
+int lsh_help(char **args) {
     printf("Collin Le's LSH\n");
     printf("Type program names and arguments, and hit enter.\n");
     printf("The following are built in commands:\n");
